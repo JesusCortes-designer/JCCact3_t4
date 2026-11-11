@@ -1,107 +1,130 @@
-# JCCact3_t4 — CRUD Spring Boot + JPA + MySQL
+# JCCact3_t4
 
-CRUD de **Libros** y **Autores** con relación **Muchos a Uno** (`Libro` → `Autor`),
-hecho con Spring Boot 4.1.2, Spring Data JPA, Thymeleaf y MySQL. Incluye vistas
-propias (Thymeleaf) y API REST (para Postman/Bruno), todo en el mismo proyecto.
+CRUD de Libros y Autores hecho con Spring Boot, Spring Data JPA, Thymeleaf y MySQL.
+Un autor puede tener muchos libros y cada libro pertenece a un solo autor.
+
+Proyecto en el VPS: http://20.119.81.138:8085
 
 ## Estructura
 
 ```
 com.example.demoCrud
-├── models/       Autor, Libro (entidades JPA)
-├── repository/   AutorRepository, LibroRepository (JpaRepository)
-├── service/      AutorService, LibroService (lógica de negocio)
-├── controllers/  *RestController (JSON) y *ViewController (Thymeleaf)
-├── dto/          Request/Response (el Libro devuelve autorNombre)
-└── exception/    ApiException + manejador
+├── models/       Autor, Libro
+├── repository/   AutorRepository, LibroRepository
+├── service/      AutorService, LibroService
+├── controllers/  controladores REST y controladores de vistas
+├── dto/          objetos de entrada y salida
+└── exception/    manejo de errores
 ```
 
 ## Relación entre entidades
 
-- `Libro` tiene `@ManyToOne` hacia `Autor` con `@JoinColumn(name = "autor_id")` → llave foránea.
-- `Autor` tiene `@OneToMany(mappedBy = "autor")` hacia sus libros.
-- Regla de negocio: no se puede eliminar un autor que tenga libros (responde 409).
+- Libro tiene @ManyToOne hacia Autor, con @JoinColumn(name = "autor_id"), que crea la llave foránea.
+- Autor tiene @OneToMany(mappedBy = "autor") hacia sus libros.
+- No se puede eliminar un autor que tenga libros.
 
-## Ejecutar en local
+## Configuración
 
-1. Crear la base de datos vacía: `CREATE DATABASE act3_db;`
-2. Ajustar la contraseña en `application.properties` (`DB_PASS`) o definir las variables de entorno.
-3. `mvn spring-boot:run` (o ejecutar `DemoCrudApplication` desde el IDE).
-4. Abrir <http://localhost:8080> (vistas) o usar `http://localhost:8080/api/libros` (REST).
+La conexión a la base de datos se define con variables de entorno, así no se suben contraseñas al repositorio.
 
-Hibernate crea las tablas automáticamente (`ddl-auto=update`).
+| Variable    | Ejemplo |
+|-------------|---------|
+| SERVER_PORT | 8085    |
+| DB_USER     | act3    |
+| DB_PASS     | contraseña de la base de datos |
 
-## Variables de entorno (para el VPS)
+Hibernate crea las tablas automáticamente al iniciar la aplicación.
 
-| Variable      | Ejemplo                                             |
-|---------------|-----------------------------------------------------|
-| `SERVER_PORT` | `8083`                                              |
-| `DB_URL`      | `jdbc:mysql://localhost:3306/act3_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC` |
-| `DB_USER`     | `act3`                                              |
-| `DB_PASS`     | *(tu contraseña, nunca en el repositorio)*          |
+## Endpoints
 
-## Endpoints REST
+| Método | Ruta               | Acción           |
+|--------|--------------------|------------------|
+| POST   | /api/libros        | Crear libro      |
+| GET    | /api/libros        | Listar libros    |
+| GET    | /api/libros/{id}   | Ver un libro     |
+| PUT    | /api/libros/{id}   | Actualizar libro |
+| DELETE | /api/libros/{id}   | Eliminar libro   |
+| POST   | /api/autores       | Crear autor      |
+| GET    | /api/autores       | Listar autores   |
+| GET    | /api/autores/{id}  | Ver un autor     |
+| PUT    | /api/autores/{id}  | Actualizar autor |
+| DELETE | /api/autores/{id}  | Eliminar autor   |
 
-| Método | Ruta               | Acción              |
-|--------|--------------------|---------------------|
-| POST   | `/api/libros`      | Crear libro         |
-| GET    | `/api/libros`      | Listar libros       |
-| GET    | `/api/libros/{id}` | Obtener libro       |
-| PUT    | `/api/libros/{id}` | Actualizar libro    |
-| DELETE | `/api/libros/{id}` | Eliminar libro      |
-| POST/GET/PUT/DELETE | `/api/autores[/{id}]` | CRUD de autores |
+Vistas web: /libros y /autores.
 
-Ejemplo de creación:
-
-```json
-POST /api/libros
-{ "titulo": "Cien años de soledad", "anioPublicacion": 1967, "autorId": 1 }
-```
-
-Respuesta (se ve el nombre del autor, no solo el ID):
+Ejemplo para crear un libro:
 
 ```json
-{ "id": 1, "titulo": "Cien años de soledad", "anioPublicacion": 1967, "autorId": 1, "autorNombre": "Gabriel García Márquez" }
+{ "titulo": "Santa Biblia", "anioPublicacion": 100, "autorId": 1 }
 ```
 
-La colección de Postman está en `postman/JCCact3_t4.postman_collection.json`
-(variable `baseUrl`: cambia `localhost:8080` por la IP:puerto del VPS).
+Respuesta:
+
+```json
+{ "id": 1, "titulo": "Santa Biblia", "anioPublicacion": 100, "autorId": 1, "autorNombre": "Varios" }
+```
+
+La colección de Postman está en postman/JCCact3_t4.postman_collection.json.
 
 ## Despliegue en el VPS
 
-```bash
-# En tu PC
+1. Compilar el proyecto:
+
+```
 mvn clean package -DskipTests
-scp target/demoCrud-0.0.1-SNAPSHOT.jar usuario@IP_VPS:~/act3/
-
-# En el VPS (base de datos y usuario propios)
-sudo mysql -e "CREATE DATABASE act3_db; CREATE USER 'act3'@'localhost' IDENTIFIED BY 'TU_PASSWORD'; GRANT ALL PRIVILEGES ON act3_db.* TO 'act3'@'localhost';"
-
-# Ejecutar en un puerto nuevo (distinto al de las actividades 1 y 2)
-SERVER_PORT=8083 DB_USER=act3 DB_PASS=TU_PASSWORD java -jar ~/act3/demoCrud-0.0.1-SNAPSHOT.jar
 ```
 
-Para dejarlo corriendo de forma permanente se incluye `deploy/act3.service` (systemd).
-Si el VPS tiene firewall, abre el puerto: `sudo ufw allow 8083/tcp`.
+2. Subir el archivo al VPS:
+
+```
+scp target/demoCrud-0.0.1-SNAPSHOT.jar azureuser@20.119.81.138:~/act3/
+```
+
+3. Crear la base de datos y el usuario en MySQL:
+
+```
+CREATE DATABASE act3_db;
+CREATE USER 'act3'@'localhost' IDENTIFIED BY 'TU_PASSWORD';
+GRANT ALL PRIVILEGES ON act3_db.* TO 'act3'@'localhost';
+```
+
+4. Ejecutar en el puerto 8085:
+
+```
+SERVER_PORT=8085 DB_USER=act3 DB_PASS=TU_PASSWORD java -jar ~/act3/demoCrud-0.0.1-SNAPSHOT.jar
+```
+
+5. Abrir el puerto 8085 en el firewall del VPS y en las reglas de red de Azure.
+
+Para que siga corriendo al cerrar la sesión o reiniciar el VPS se usa el servicio systemd incluido en deploy/act3.service.
 
 ## Capturas de pantalla
 
-> Reemplaza cada línea con tu captura (guárdalas en `docs/capturas/`).
+Tablas y llave foránea en MySQL:
 
-### Entidades y llave foránea en MySQL
 ![Tablas](docs/capturas/01-tabla-autores-mysql.png)
-![FK](docs/capturas/02-tabla-libros-fk.png)
+![Llave foránea](docs/capturas/02-tabla-libros-fk.png)
 
-### CRUD
-| Operación | Captura |
-|-----------|---------|
-| Crear | ![crear](docs/capturas/03-crear.png) |
-| Leer | ![leer](docs/capturas/04-leer-lista.png) |
-| Actualizar | ![actualizar](docs/capturas/05-actualizar.png) |
-| Eliminar | ![eliminar](docs/capturas/06-eliminar.png) |
+Crear:
 
-### Relación reflejada (nombre del autor, no solo el ID)
-![relacion](docs/capturas/07-postman-get-libros.png)
+![Crear](docs/capturas/03-crear.png)
 
-### Corriendo en el VPS
-![vps](docs/capturas/08-vps-corriendo.png)
+Leer:
+
+![Leer](docs/capturas/04-leer-lista.png)
+
+Actualizar:
+
+![Actualizar](docs/capturas/05-actualizar.png)
+
+Eliminar:
+
+![Eliminar](docs/capturas/06-eliminar.png)
+
+Relación (se ve el nombre del autor):
+
+![Relación](docs/capturas/07-postman-get-libros.png)
+
+Proyecto corriendo en el VPS:
+
+![VPS](docs/capturas/08-vps-corriendo.png)
