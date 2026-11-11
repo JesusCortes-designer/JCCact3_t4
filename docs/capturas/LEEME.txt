@@ -1,0 +1,10 @@
+Guarda aquí tus capturas de pantalla (png) con estos nombres sugeridos:
+
+01-tabla-autores-mysql.png     (DESCRIBE autores; o vista en Workbench/DBeaver)
+02-tabla-libros-fk.png         (SHOW CREATE TABLE libros; mostrando la llave foránea autor_id)
+03-crear.png
+04-leer-lista.png              (se ve el NOMBRE del autor, no solo el ID)
+05-actualizar.png
+06-eliminar.png
+07-postman-get-libros.png      (JSON con autorNombre)
+08-vps-corriendo.png           (el CRUD funcionando en la IP:puerto del VPS)

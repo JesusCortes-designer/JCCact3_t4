@@ -1,0 +1,26 @@
+* { box-sizing: border-box; }
+body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0; background: #f4f6f9; color: #1f2937; }
+nav { background: #1e3a5f; padding: 14px 32px; display: flex; gap: 24px; align-items: center; }
+nav .brand { color: #fff; font-weight: 700; margin-right: auto; }
+nav a { color: #cbd5e1; text-decoration: none; font-weight: 500; }
+nav a:hover { color: #fff; }
+main { max-width: 900px; margin: 32px auto; padding: 0 16px; }
+.card { background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+.top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+h1 { font-size: 1.5rem; margin: 0; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+th { background: #f9fafb; font-size: .85rem; text-transform: uppercase; color: #6b7280; }
+.btn { display: inline-block; padding: 7px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: .9rem; text-decoration: none; color: #fff; background: #2563eb; }
+.btn:hover { opacity: .9; }
+.btn.edit { background: #d97706; }
+.btn.del { background: #dc2626; }
+.btn.gray { background: #6b7280; }
+form.inline { display: inline; }
+label { display: block; margin: 14px 0 4px; font-weight: 600; }
+input, select { width: 100%; padding: 9px 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; }
+.actions { margin-top: 20px; display: flex; gap: 8px; }
+.msg { padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; }
+.msg.ok { background: #dcfce7; color: #166534; }
+.msg.error { background: #fee2e2; color: #991b1b; }
+.empty { color: #6b7280; text-align: center; padding: 24px; }

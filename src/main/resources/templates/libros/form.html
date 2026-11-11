@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Libro</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<nav>
+    <span class="brand">Biblioteca · Act 3</span>
+    <a th:href="@{/libros}">Libros</a>
+    <a th:href="@{/autores}">Autores</a>
+</nav>
+<main>
+    <div class="card">
+        <h1 th:text="${titulo}">Libro</h1>
+        <div class="msg error" th:if="${error}" th:text="${error}"></div>
+        <form th:action="@{${accion}}" th:object="${libro}" method="post">
+            <label for="titulo">Título</label>
+            <input id="titulo" type="text" th:field="*{titulo}" required>
+
+            <label for="anioPublicacion">Año de publicación</label>
+            <input id="anioPublicacion" type="number" th:field="*{anioPublicacion}">
+
+            <label for="autorId">Autor</label>
+            <select id="autorId" th:field="*{autorId}" required>
+                <option value="">-- Selecciona un autor --</option>
+                <option th:each="a : ${autores}" th:value="${a.id()}" th:text="${a.nombre()}"></option>
+            </select>
+
+            <div class="actions">
+                <button class="btn" type="submit">Guardar</button>
+                <a class="btn gray" th:href="@{/libros}">Cancelar</a>
+            </div>
+        </form>
+        <p class="empty" th:if="${#lists.isEmpty(autores)}">
+            Primero registra un autor en <a th:href="@{/autores/nuevo}">Autores</a>.
+        </p>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Libros</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<nav>
+    <span class="brand">Biblioteca · Act 3</span>
+    <a th:href="@{/libros}">Libros</a>
+    <a th:href="@{/autores}">Autores</a>
+</nav>
+<main>
+    <div class="card">
+        <div class="top">
+            <h1>Libros</h1>
+            <a class="btn" th:href="@{/libros/nuevo}">+ Nuevo libro</a>
+        </div>
+        <div class="msg ok" th:if="${ok}" th:text="${ok}"></div>
+        <div class="msg error" th:if="${error}" th:text="${error}"></div>
+        <table>
+            <thead>
+            <tr><th>ID</th><th>Título</th><th>Año</th><th>Autor</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="l : ${libros}">
+                <td th:text="${l.id()}"></td>
+                <td th:text="${l.titulo()}"></td>
+                <td th:text="${l.anioPublicacion()}"></td>
+                <td th:text="${l.autorNombre()}"></td>
+                <td>
+                    <a class="btn edit" th:href="@{/libros/{id}/editar(id=${l.id()})}">Editar</a>
+                    <form class="inline" th:action="@{/libros/{id}/eliminar(id=${l.id()})}" method="post"
+                          onsubmit="return confirm('¿Eliminar este libro?');">
+                        <button class="btn del" type="submit">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="empty" th:if="${#lists.isEmpty(libros)}">Aún no hay libros registrados.</p>
+    </div>
+</main>
+</body>
+</html>
