@@ -102,29 +102,29 @@ Para que siga corriendo al cerrar la sesión o reiniciar el VPS se usa el servic
 
 Tablas y llave foránea en MySQL:
 
-![Tablas](docs/capturas/01-tabla-autores-mysql.png)
-![Llave foránea](docs/capturas/02-tabla-libros-fk.png)
+![Tablas](docs/capturas/capturas/tablaAutores.png)
+![Llave foránea](docs/capturas/capturas/llaveForanea.png)
 
 Crear:
 
-![Crear](docs/capturas/03-crear.png)
+![Crear](docs/capturas/capturas/crear.png)
 
 Leer:
 
-![Leer](docs/capturas/04-leer-lista.png)
+![Leer](docs/capturas/capturas/ver.png)
 
 Actualizar:
 
-![Actualizar](docs/capturas/05-actualizar.png)
+![Actualizar](docs/capturas/capturas/actualizar.png)
 
 Eliminar:
 
-![Eliminar](docs/capturas/06-eliminar.png)
+![Eliminar](docs/capturas/capturas/eliminar.png)
 
 Relación (se ve el nombre del autor):
 
-![Relación](docs/capturas/07-postman-get-libros.png)
+![Relación](docs/capturas/capturas/relacion.png)
 
 Proyecto corriendo en el VPS:
 
-![VPS](docs/capturas/08-vps-corriendo.png)
+![VPS](docs/capturas/capturas/vps.png)
